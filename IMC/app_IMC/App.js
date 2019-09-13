@@ -145,7 +145,7 @@ export default class FetchExample extends React.Component {
         <FlatList
           data={this.state.dataSource}
           renderItem={({ item }) =>
-            <Text>{item.title}, Ano {item.releaseYear}</Text>}
+            <Text>Nome {item.title}, Ano {item.releaseYear}</Text>}
           keyExtractor={({ id }, index) => id}
         />
       </View>
