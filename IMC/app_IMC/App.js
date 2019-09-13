@@ -1,100 +1,154 @@
-import React, { Component } from 'react';
-import {
-  StyleSheet,
-  View,
-  TextInput,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
+// import React, { Component } from 'react';
+// import {
+//   StyleSheet,
+//   View,
+//   TextInput,
+//   Text,
+//   TouchableOpacity,
+// } from 'react-native';
 
 
-export default class App extends Component<Props>{
+// export default class App extends Component {
+
+//   constructor(props) {
+//     super(props)
+//     this.state = { altura: 0, massa: 0, resultado: 0, resultado_Texto: "" }
+//     this.calcular = this.calcular.bind(this)
+//   }
+
+//   calcular() {
+//     let imc = this.state.massa / (this.state.altura * this.state.altura)
+
+//     let s = this.state
+//     s.resultado = imc
+//     this.setState(s)
+
+//     if (s.resultado < 16) {
+//       s.resultado_Texto = "Magreza Leve"
+//     } else if (s.resultado < 17) {
+//       s.resultado_Texto = "Magreza Moderada"
+//     } else if (s.resultado < 18.5) {
+//       s.resultado_Texto = "Magreza Leve"
+//     } else if (s.resultado < 25) {
+//       s.resultado_Texto = "Saudável"
+//     } else if (s.resultado < 30) {
+//       s.resultado_Texto = "Sobrepeso"
+//     } else if (s.resultado < 35) {
+//       s.resultado_Texto = "Obsidade Grau I"
+//     } else if (s.resultado < 40) {
+//       s.resultado_Texto = "Obsidade Grau II"
+//     } else {
+//       s.resultado_Texto = "Obsidade Grau III"
+//     }
+//   }
+
+//   render() {
+//     return (
+//       <View style={styles.container}>
+//         <View style={styles.entradas}>
+//           <TextInput placeholder="Massa" keyboardType='numeric' style={styles.input} onChangeText={(massa) => (this.setState({ massa }))} />
+//           <TextInput placeholder="Altura" keyboardType='numeric' style={styles.input} onChangeText={(altura) => (this.setState({ altura }))} />
+//         </View>
+//         <TouchableOpacity style={styles.button} onPress={this.calcular}>
+//           <Text style={styles.buttonText}>Calcular</Text>
+//         </TouchableOpacity>
+//         <Text style={styles.resultado}>{this.state.resultado.toFixed(2)}</Text>
+//         <Text style={styles.resultado_Texto}>{this.state.resultado_Texto}</Text>
+//       </View>
+//     );
+//   }
+// }
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#F5FCFF',
+//   },
+//   entradas: {
+//     flexDirection: 'row',
+//   },
+//   input: {
+//     height: 80,
+//     textAlign: 'center',
+//     width: '50%',
+//     fontSize: 50,
+//     marginTop: 24,
+//   },
+//   button: {
+//     backgroundColor: '#89ffa5',
+//   },
+//   buttonText: {
+//     textAlign: 'center',
+//     padding: 10,
+//     fontSize: 30,
+//     color: "#6dc4a4",
+//     fontWeight: 'bold',
+//   },
+//   resultado: {
+//     alignSelf: 'center',
+//     color: 'lightgray',
+//     padding: 15,
+//     fontSize: 65,
+//   },
+//   resultado_Texto: {
+//     alignSelf: 'center',
+//     color: 'lightgray',
+//     padding: 15,
+//     fontSize: 45,
+//   }
+// });
+
+// CONSUMINDO API REST
+
+import React from 'react';
+import { FlatList, ActivityIndicator, Text, View } from 'react-native';
+
+export default class FetchExample extends React.Component {
 
   constructor(props) {
-    super(props)
-    this.state = { altura: 0, massa: 0, resultado: 0, resultado_Texto: "" }
-    this.calcular = this.calcular.bind(this)
+    super(props);
+    this.state = { isLoading: true }
   }
 
-  calcular() {
-    let imc = this.state.massa / (this.state.altura * this.state.altura)
+  componentDidMount() {
+    return fetch('https://facebook.github.io/react-native/movies.json')
+      .then((response) => response.json())
+      .then((responseJson) => {
 
-    let s = this.state
-    s.resultado = imc
-    this.setState(s)
+        this.setState({
+          isLoading: false,
+          dataSource: responseJson.movies,
+        }, function () {
 
-    if (s.resultado < 16) {
-      s.resultado_Texto = "Magreza Leve"
-    } else if (s.resultado < 17) {
-      s.resultado_Texto = "Magreza Moderada"
-    } else if (s.resultado < 18.5) {
-      s.resultado_Texto = "Magreza Leve"
-    } else if (s.resultado < 25) {
-      s.resultado_Texto = "Saudável"
-    } else if (s.resultado < 30) {
-      s.resultado_Texto = "Sobrepeso"
-    } else if (s.resultado < 35) {
-      s.resultado_Texto = "Obsidade Grau I"
-    } else if (s.resultado < 40) {
-      s.resultado_Texto = "Obsidade Grau II"
-    } else {
-      s.resultado_Texto = "Obsidade Grau III"
-    }
+        });
+
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
+
+
 
   render() {
-    return (
-      <View style={styles.container}>
-        <View style={styles.entradas}>
-          <TextInput placeholder="Massa" keyboardType='numeric' style={styles.input} onChangeText={(massa) => (this.setState({ massa }))} />
-          <TextInput placeholder="Altura" keyboardType='numeric' style={styles.input} onChangeText={(altura) => (this.setState({ altura }))} />
+
+    if (this.state.isLoading) {
+      return (
+        <View style={{ flex: 1, padding: 20 }}>
+          <ActivityIndicator />
         </View>
-        <TouchableOpacity style={styles.button} onPress={this.calcular}>
-          <Text style={styles.buttonText}>Calcular</Text>
-        </TouchableOpacity>
-        <Text style={styles.resultado}>{this.state.resultado.toFixed(2)}</Text>
-        <Text style={styles.resultado_Texto}>{this.state.resultado_Texto}</Text>
+      )
+    }
+
+    return (
+      <View style={{ flex: 1, paddingTop: 20 }}>
+        <FlatList
+          data={this.state.dataSource}
+          renderItem={({ item }) =>
+            <Text>{item.title}, Ano {item.releaseYear}</Text>}
+          keyExtractor={({ id }, index) => id}
+        />
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F5FCFF',
-  },
-  entradas: {
-    flexDirection: 'row',
-  },
-  input: {
-    height: 80,
-    textAlign: 'center',
-    width: '50%',
-    fontSize: 50,
-    marginTop: 24,
-  },
-  button: {
-    backgroundColor: '#89ffa5',
-  },
-  buttonText: {
-    textAlign: 'center',
-    padding: 10,
-    fontSize: 30,
-    color: "#6dc4a4",
-    fontWeight: 'bold',
-  },
-  resultado: {
-    alignSelf: 'center',
-    color: 'lightgray',
-    padding: 15,
-    fontSize: 65,
-  },
-  resultado_Texto: {
-    alignSelf: 'center',
-    color: 'lightgray',
-    padding: 15,
-    fontSize: 45,
-  }
-});
-
